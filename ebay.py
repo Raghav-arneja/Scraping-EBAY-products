@@ -12,7 +12,8 @@ print(Final_url)
 global title,  price, image
 title = []
 price = []
-image = []
+product_url = []
+product_image_url = []
 soup = BeautifulSoup(Final_url.content, 'html.parser')
 
 # extracting the data
@@ -26,11 +27,13 @@ def scrape_data(pass_soup):
     for item in product_list:
         title_text = item.find(class_ = 's-item__title').get_text()
         price_text = item.find(class_ = 's-item__price').get_text()
+        item_url = item.find('a').get('href')
         image_url = item.find('img')['src']
 
         title.append(title_text)
         price.append(price_text)
-        image.append(image_url)
+        product_url.append(item_url)
+        product_image_url.append(image_url)
     # print(len(title))
     
 scrape_data(soup)
@@ -54,7 +57,8 @@ for link in links:
 product_items = pd.DataFrame({
     'title' : title,
     'price' : price,
-    'image_urls' : image,
+    'product_url': product_url,
+    'image_url' : product_image_url,
 })
 
 product_items.to_csv('Ebay_product_list.csv')
